@@ -26,6 +26,20 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico", // Updated to include leading slash for correct path
   },
+  openGraph: {
+    title: "Visioneer Homebase",
+    description:
+      "Welcome to Visioneer Homebase, your gateway to the world of computer vision research and development. Explore our resources, projects, and community.",
+    images: [
+      {
+        url: "/opengraph-image.jpg", 
+        width: 1477,
+        height: 812,
+        alt: "Visioneer Homebase Banner",
+      },
+    ],
+    url: "https://visioneerpaths.vercel.app", 
+  },
 };
 
 export default function RootLayout({
