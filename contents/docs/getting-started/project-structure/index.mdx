@@ -1,0 +1,225 @@
+---
+title: Project Structure
+description: This section provides an overview of Project Structure.
+---
+
+## Project Structure Overview
+
+### assets
+This folder contains static assets including images and videos used in the project.
+
+<Files
+  items={[
+    {
+      type: "folder",
+      name: "assets",
+      isOpen: true,
+      children: [
+        {
+          type: "folder",
+          name: "img",
+          children: [
+            { type: "file", name: "CUDA_TOOLKIT.png" },
+            { type: "file", name: "MLP-1.png" },
+            { type: "file", name: "MLP-2.png" },
+            { type: "file", name: "MLP-3.png" },
+            { type: "file", name: "MLP-4.png" },
+            { type: "file", name: "art-tensorflow.png" },
+            { type: "file", name: "convolution.png" },
+            { type: "file", name: "cudnn.png" },
+            { type: "file", name: "device-pic.png" },
+            { type: "file", name: "fitur.png" },
+            { type: "file", name: "framework.png" },
+            { type: "file", name: "fully.png" },
+            { type: "file", name: "image-1.png" },
+            { type: "folder", name: "sample-images-main" },
+          ],
+        },
+        {
+          type: "folder",
+          name: "videos",
+          children: [
+            { type: "file", name: "drummer.mp4" },
+          ],
+        },
+      ],
+    },
+  ]}
+/>
+
+### weeks
+This folder contains weekly learning modules from week-1 to week-6, with plans to update up to week-12.
+
+<Files
+  items={[
+    {
+      type: "folder",
+      name: "weeks",
+      isOpen: true,
+      children: [
+        {
+          type: "folder",
+          name: "week-1",
+          children: [
+            { type: "file", name: "README.md" },
+            {
+              type: "folder",
+              name: "submission",
+              children: [{ type: "file", name: "README.md" }]
+            }
+          ]
+        },
+        {
+          type: "folder",
+          name: "week-2",
+          children: [
+            { type: "file", name: "README.md" },
+            {
+              type: "folder",
+              name: "submission",
+              children: [{ type: "file", name: "README.md" }]
+            }
+          ]
+        },
+        {
+          type: "folder",
+          name: "week-3",
+          children: [
+            { type: "file", name: "README.md" },
+            { type: "file", name: "NN.ipynb" },
+            { type: "file", name: "train.csv" }
+          ]
+        },
+        {
+          type: "folder",
+          name: "week-4",
+          children: [
+            { type: "file", name: "README.md" },
+            {
+              type: "folder",
+              name: "script",
+              children: [
+                { type: "file", name: "yolo-nvidia.bat" },
+                { type: "file", name: "yolo.bat" }
+              ]
+            },
+            { type: "file", name: "yolo.py" }
+          ]
+        },
+        {
+          type: "folder",
+          name: "week-5",
+          children: [
+            { type: "file", name: "README.md" },
+            {
+              type: "folder",
+              name: "submission",
+              children: [{ type: "file", name: "README.md" }]
+            },
+            { type: "file", name: "yolo.py" }
+          ]
+        },
+        {
+          type: "folder",
+          name: "week-6",
+          children: [
+            { type: "file", name: "README.md" },
+            {
+              type: "folder",
+              name: "vision-training",
+              children: [
+                {
+                  type: "folder",
+                  name: "train",
+                  children: [
+                    {
+                      type: "folder",
+                      name: "weights",
+                      children: [
+                        { type: "file", name: "best.pt" },
+                        { type: "file", name: "last.pt" }
+                      ]
+                    },
+                    { type: "file", name: "F1_curve.png" },
+                    { type: "file", name: "PR_curve.png" },
+                    { type: "file", name: "P_curve.png" },
+                    { type: "file", name: "R_curve.png" },
+                    { type: "file", name: "args.yaml" },
+                    { type: "file", name: "confusion_matrix.png" },
+                    { type: "file", name: "confusion_matrix_normalized.png" },
+                    { type: "file", name: "labels.jpg" },
+                    { type: "file", name: "results.csv" },
+                    { type: "file", name: "results.png" },
+                    { type: "file", name: "train_batch0.jpg" },
+                    { type: "file", name: "train_batch1.jpg" },
+                    { type: "file", name: "train_batch2.jpg" },
+                    { type: "file", name: "val_batch0_labels.jpg" },
+                    { type: "file", name: "val_batch0_pred.jpg" }
+                  ]
+                },
+                {
+                  type: "folder",
+                  name: "train-2",
+                  children: [
+                    { type: "file", name: "F1_curve.png" },
+                    { type: "file", name: "PR_curve.png" },
+                    { type: "file", name: "P_curve.png" },
+                    { type: "file", name: "R_curve.png" },
+                    { type: "file", name: "args.yaml" },
+                    { type: "file", name: "confusion_matrix.png" },
+                    { type: "file", name: "confusion_matrix_normalized.png" },
+                    { type: "file", name: "labels.jpg" },
+                    { type: "file", name: "results.csv" },
+                    { type: "file", name: "results.png" },
+                    { type: "file", name: "train_batch0.jpg" },
+                    { type: "file", name: "train_batch1.jpg" },
+                    { type: "file", name: "train_batch2.jpg" },
+                    { type: "file", name: "val_batch0_labels.jpg" },
+                    { type: "file", name: "val_batch0_pred.jpg" }
+                  ]
+                },
+              ]
+            },
+            { type: "file", name: "yolo-wandb.py" }
+          ]
+        }
+      ]
+    }
+  ]}
+/>
+
+### cnn
+This folder contains the Convolutional Neural Networks (CNN) learning module.
+
+<Files
+  items={[
+    {
+      type: "folder",
+      name: "cnn",
+      isOpen: true,
+      children: [
+        { type: "file", name: "README.md" },
+      ],
+    },
+  ]}
+/>
+
+### opencv
+This folder contains the OpenCV learning module.
+
+<Files
+  items={[
+    {
+      type: "folder",
+      name: "opencv",
+      isOpen: true,
+      children: [{ type: "file", name: "README.md" },],
+    },
+  ]}
+/>
+
+### Additional
+- **`LICENSE`**: Contains the GPL-3.0 license for the project.
+- **`README.md`**: Provides an overview and checklist of the project.
+
+This structure organizes the project to support scalability and maintainability, focusing on vision-related learning modules and assets.

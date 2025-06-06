@@ -1,0 +1,363 @@
+---
+title: "Week-3: Introduction to NN (Neural Network)"
+description: "Introduction to Neural Network (NN) and applied to Image Classification using mnist dataset. We will also learn how to make CNN from scratch with Multi Layer Perceptron (MLP) approach."
+date: 30-04-2025
+authors:
+  - avatar: "https://avatars.githubusercontent.com/u/87745598?v=4"
+    handle: wildanaziz
+    username: Wildan Aziz
+    handleUrl: "https://github.com/wildanaziz/"
+cover: "https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/matriks.png"
+---
+
+# Week-3: Introduction to NN (Neural Network)
+Pada Week 3 ini kita akan mengulik dalam-dalam bersama terkait Neural Network. Dimana kita akan membahas secara perhitungan matematis dan implementasi dari Neural Network menggunakan pendekatan coding. So, buat para vision amarineers cuss kita ulik.
+
+Neural Network (NN) atau jaringan syaraf tiruan adalah model komputasi yang terinspirasi dari cara kerja otak manusia. NN terdiri dari unit-unit pemrosesan sederhana yang disebut neuron, yang saling terhubung untuk memproses informasi dan mempelajari pola dari data. NN banyak digunakan dalam berbagai aplikasi AI, seperti pengenalan gambar, pemrosesan bahasa alami, dan prediksi.
+
+Multi-Layer Perceptron (MLP) adalah salah satu jenis Neural Network yang paling dasar dan termasuk dalam kategori feedforward neural network. MLP terdiri dari beberapa lapisan (layers) neuron yaitu:
+Input Layer: Lapisan pertama yang menerima data masukan (fitur).
+Hidden Layer: Lapisan tengah (bisa lebih dari satu) yang memproses informasi melalui kombinasi bobot, bias, dan fungsi aktivasi (misalnya, ReLU, sigmoid, atau tanh). Lapisan ini bertanggung jawab untuk menangkap pola kompleks dalam data.
+Output Layer: Lapisan terakhir yang menghasilkan keluaran, seperti klasifikasi atau prediksi numerik.
+
+## Math Section 
+![MLP-1](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/MLP-1.png)
+
+Berdasarkan figure diatas dapat diketahui bahwa terdiri atas input layer, 2 hidden layer dan output layer. Input layer direpresentasikan sebagai variable A[0] yang menampung shape 2 dimensi
+Hidden Layer sendiri bertugas dalam memproses informasi dari input layer melalui weight, bias dan fungsi aktivasi. Fungsi aktivasi yang digunakan pada gambar tersebut yakni ReLU
+Penjelasan Hidden Layer secara matematis.
+
+Persamaan untuk Forward Propagation (hidden layer pertama):
+
+### Z<sup>[1]</sup> = W<sup>[1]</sup> * A<sup>[0]</sup> + b<sup>[1]</sup>
+
+**Penjelasan:**
+- **Z**: Forward Propagation (hidden layer pertama)
+- **W**: Weight (bobot)
+- **A<sup>[0]</sup>**: Input (apabila A<sup>[1]</sup> adalah hidden layer)
+- **b**: Bias
+
+![MLP-2](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/MLP-2.png)
+Selanjutnya pada figure tersebut pada proses menuju hidden layer dari hidden layer pertama menuju hidden layer kedua terdapat fungsi aktivasi RELu. RELu akan mengembalikan nilai 0 ketika suatu nilai berada dibawah 0 dan akan mengembalikan nilai maksimal apabila lebih dari 0
+Menuju pada Output layer akan disederhanakan menggunakan fungsi aktivasi softmax dimana mengubah input bilangan asli menjadi distribusi probabilitas.
+
+![MLP-3](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/MLP-3.png)
+Setelah melakukan proses Forward Propagation yang dimana bermula dari input -> hidden layer + fungsi aktivasi -> hidden layer + fungsi aktivasi -> output layer. Selanjutnya akan dilakukan Backward Propagation dimana proses ini bertujuan untuk memproses error dan memperbaiki bobot dan bias.
+Ketika berada di output layer menuju hidden layer pastinya akan dilakukan one hot encoding terlebih dahulu. One hot encoding adalah teknik untuk mengubah label kategorikal menjadi representasi numerik yang lebih mudah untuk diolah oleh neural network.
+Tujuan dari one hot encoding juga untuk menjaga kekonsistenan data.
+
+Proses menghitung eror:
+### dZ<sup>[2]</sup> = A<sup>[2]</sup> - Y
+
+**Penjelasan:**
+- **dZ<sup>[2]</sup>:** merupakan variable untuk melakukan perhitungan error dan backpropagation
+- **A<sup>[2]</sup>:** output layer
+- **Y:** merupakan bias dari output layer
+
+Update parameter untuk layer 2:
+### dW<sup>[2]</sup> = 1/m * dZ<sup>[2]</sup> * A<sup>[1]</sup> . T
+
+Penjelasan:
+- **dW<sup>[2]</sup>:** merupakan variable bobot untuk melakukan turunan dan backpropagation
+- **A<sup>[1]</sup>:** hidden layer pertama
+- **T:** merupakan transpose agar sesuai dengan bentuk matriks
+
+### dB<sup>[2]</sup> = 1/m * Σ dZ<sup>[2]</sup>
+
+Penjelasan:
+- **dB<sup>[2]</sup>:** merupakan variable bias untuk melakukan turunan dan backpropagation
+- **dZ<sup>[2]</sup>:** merupakan variable error untuk melakukan perhitungan eror pada layer 2 dan backpropagation
+- **m:** jumlah data
+- **Σ:** merupakan operasi penjumlahan
+
+![MLP-4](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/MLP-4.png)
+
+Propagasi nilai error ke hidden layer pertama:
+### dZ<sup>[1]</sup> = W<sup>[2]</sup> . T * dZ<sup>[2]</sup> . g'(Z<sup>[1]</sup>)
+
+Penjelasan:
+- **dZ<sup>[1]</sup>:** merupakan variable error untuk melakukan perhitungan eror pada hidden layer pertama dan backpropagation
+- **W<sup>[2]</sup>:** bobot dari hidden layer kedua ke hidden layer pertama
+- **T:** merupakan transpose agar sesuai dengan bentuk matriks
+- **dZ<sup>[2]</sup>:** merupakan variable error untuk melakukan perhitungan eror pada hidden layer kedua dan backpropagation
+- **g'(Z<sup>[1]</sup>):** merupakan fungsi aktivasi dari hidden layer pertama
+
+Update parameter untuk layer 1:
+### dW<sup>[1]</sup> = 1/m * dZ<sup>[2]</sup> * A<sup>[0]</sup> . T
+
+Penjelasan:
+- **dW<sup>[1]</sup>:** merupakan variable untuk melakukan perhitungan error dan backpropagation
+- **A<sup>[0]</sup>:** input layer
+- **T:** merupakan transpose agar sesuai dengan bentuk matriks
+
+### dB<sup>[1]</sup> = 1/m * Σ dZ<sup>[2]</sup>
+
+Penjelasan:
+- **dB<sup>[1]</sup>:** merupakan variable bias untuk melakukan turunan dan backpropagation
+- **dZ<sup>[2]</sup>:** merupakan variable error untuk melakukan perhitungan eror pada layer 2 dan backpropagation
+- **m:** jumlah data
+- **Σ:** merupakan operasi 
+
+## Coding Section with Python
+Langkah pertama yang perlu dilakukan yakni mengimpor library yang dibutuhkan. Disini kita akan membuat from scratch bermodalkan numpy saja
+```python:main.py
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+```
+
+Langkah kedua impor datasetnya pastikan dalam bentuk .csv agar memudahkan dalam proses pengolahan data numerik
+```python:main.py
+data = pd.read_csv('dataset.csv')
+data.head()
+```
+
+langkah ketiga kita ubah variable data yakni "dataset.csv" menjadi numpy array, dan pisahkan menjadi variable m dan n menjadi shape yang mana akan pembagian nantinya pada data feature dan label
+```python:main.py
+data = np.array(data)
+data = np.array(data)
+m, n = data.shape
+np.random.shuffle(data)
+
+data_features = data[0:1000].T
+Y_features = data_features[0]
+X_features = data_features[1:n]
+X_features = X_features / 255
+
+data_labels = data[1000:m].T
+Y_train = data_labels[0]
+X_train = data_labels[1:n]
+X_train = X_train / 255
+```
+
+Langkah keempat yakni membuat seluruh fungsi yang dibutuhkan pada MLP dengan membuat fungsi init_params terlebih dahulu
+```python:main.py
+def init_params():
+    """
+    Initialize the parameters of the neural network.
+    W1: weights for the first layer
+    b1: biases for the first layer
+    W2: weights for the second layer
+    b2: biases for the second layer
+    """
+    
+    # W1: 10x784, b1: 10x1
+    # 10 neurons in the first layer, 784 inputs (28x28 images)
+    W1 = np.random.rand(10, 784) - 0.5
+    # W2: 10x10, b2: 10x1
+    # 10 neurons in the second layer (output layer)
+    b1 = np.random.rand(10, 1) - 0.5
+    W2 = np.random.rand(10, 10) - 0.5
+    b2 = np.random.rand(10, 1) - 0.5
+    return W1, b1, W2, b2
+```
+
+Langkah kelima yakni membuat fungsi sigmoid dan RELU
+```python:main.py
+def ReLU(Z):
+    """
+    ReLU activation function
+    Z: input to the activation function
+    Returns the activated output
+    """
+    return np.maximum(Z, 0)
+
+def softmax(Z):
+    """
+    Softmax activation function
+    Z: input to the activation function
+    Returns the activated output
+    """
+    A = np.exp(Z) / sum(np.exp(Z))
+    return A
+```
+
+Langkah keenam yakni membuat fungsi forward propagation
+```python:main.py
+def forward_propagation(X, W1, b1, W2, b2):
+    """
+    Forward propagation
+    X: input data
+    W1: weights for the first layer
+    b1: biases for the first layer
+    W2: weights for the second layer
+    b2: biases for the second layer
+    Returns the output of the second layer
+    """
+    Z1 = W1.T.dot(X) + b1
+    A1 = ReLU(Z1)
+    Z2 = W2.T.dot(A1) + b2
+    A2 = softmax(Z2)
+    return Z1, A1, Z2, A2
+```
+
+Langkah ketujuh jangan lupa untuk membuat derivative_relu dan one hot
+```python:main.py
+def ReLU_deriv(Z):
+    return Z > 0
+
+def one_hot(Y):
+    """
+    Convert labels to one-hot encoding
+    Y: labels
+    Returns one-hot encoded labels
+    """
+    one_hot_Y = np.zeros((Y.size, Y.max() + 1))
+    one_hot_Y[np.arange(Y.size), Y] = 1
+    one_hot_Y = one_hot_Y.T
+    return one_hot_Y
+```
+
+Langkah kedelapan yakni membuat fungsi backward propagation
+```python:main.py
+def backward_propagation(Z1, A1, Z2, A2, W1, W2, X, Y):
+    """
+    Backward propagation
+    Z1: output of the first layer
+    A1: activated output of the first layer
+    Z2: output of the second layer
+    A2: activated output of the second layer
+    W1: weights for the first layer
+    W2: weights for the second layer
+    X: input data
+    Y: labels
+    Returns the gradients of the weights and biases
+    """
+    m = X.shape[1]
+    one_hot_Y = one_hot(Y)
+    dZ2 = A2 - one_hot_Y
+    dW2 = 1 / m * dZ2.dot(A1.T)
+    db2 = 1 / m * np.sum(dZ2, axis=1, keepdims=True)
+    dZ1 = W2.dot(dZ2) * ReLU_deriv(Z1)
+    dW1 = 1 / m * dZ1.dot(X.T)
+    db1 = 1 / m * np.sum(dZ1, axis=1, keepdims=True)
+    return dW1, db1, dW2, db2
+```
+
+Langkah kesembilan yakni membuat fungsi update_params
+```python:main.py
+def update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha):
+    """
+    Update the parameters
+    W1: weights for the first layer
+    b1: biases for the first layer
+    W2: weights for the second layer
+    b2: biases for the second layer
+    dW1: gradient of the weights for the first layer
+    db1: gradient of the biases for the first layer
+    dW2: gradient of the weights for the second layer
+    db2: gradient of the biases for the second layer
+    alpha: learning rate
+    Returns the updated parameters
+    """
+    W1 = W1 - alpha * dW1
+    b1 = b1 - alpha * db1
+    W2 = W2 - alpha * dW2
+    b2 = b2 - alpha * db2
+    return W1, b1, W2, b2
+```
+
+Langkah kesepuluh yakni membuat fungsi accuracy
+```python:main.py
+def get_predictions(A2):
+    return np.argmax(A2, 0)
+
+def accuracy(Y, Y_pred):
+    """
+    Calculate the accuracy
+    Y: true labels
+    Y_pred: predicted labels
+    Returns the accuracy
+    """
+    print(predictions, Y)
+    return np.sum(Y == Y_pred) / Y.size
+```
+
+langkah kesebelas yakni membuat fungsi gradient_descent
+```python:main.py
+def gradient_descent(X, Y, alpha, iterations):
+    """
+    Gradient descent algorithm to train the neural network
+    X: input data
+    Y: labels
+    alpha: learning rate
+    iterations: number of iterations
+    Returns the trained weights and biases
+    """
+    W1, b1, W2, b2 = init_params()
+    for i in range(iterations):
+        Z1, A1, Z2, A2 = forward_prop(W1, b1, W2, b2, X)
+        dW1, db1, dW2, db2 = backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y)
+        W1, b1, W2, b2 = update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha)
+        if i % 10 == 0:
+            print("Iteration: ", i)
+            predictions = get_predictions(A2)
+            print(get_accuracy(predictions, Y))
+    return W1, b1, W2, b2
+```
+
+Langkah kedua belas yakni menerapkan variable W1, b1, W2, b2 pada fungsi gradient_descent
+```python:main.py
+W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.1, 500)
+```
+
+Langkah ketiga belas membuat fungsi prediksi
+```python:main.py
+def make_prediction(X, W1, b1, W2, b2):
+    """
+    Make predictions using the trained neural network.
+    
+    Parameters:
+    W1 (numpy.ndarray): Weights for layer 1
+    b1 (numpy.ndarray): Biases for layer 1
+    W2 (numpy.ndarray): Weights for layer 2
+    b2 (numpy.ndarray): Biases for layer 2
+    X (numpy.ndarray): Input data
+    
+    Returns:
+    numpy.ndarray: Predicted labels
+    """
+    _, _, _, A2 = forward_prop(W1, b1, W2, b2, X)
+    return get_predictions(A2)
+
+def test_prediction(index, W1, b1, W2, b2):
+    """
+    Test the predictions of the neural network.
+    
+    Parameters:
+    W1 (numpy.ndarray): Weights for layer 1
+    b1 (numpy.ndarray): Biases for layer 1
+    W2 (numpy.ndarray): Weights for layer 2
+    b2 (numpy.ndarray): Biases for layer 2
+    X (numpy.ndarray): Input data
+    Y (numpy.ndarray): True labels
+    
+    Returns:
+    float: Accuracy of the predictions
+    """
+    images = X_train[:, index, None]
+    predictions = make_prediction(X_train[:, index, None], W1, b1, W2, b2)
+    labels = Y_train[index]
+
+    images = images.reshape((28, 28)) * 255
+    accuracy = get_accuracy(predictions, labels)
+    plt.title(f"Predicted: {predictions}, Actual: {labels}" f"Accuracy: {accuracy}")
+    plt.imshow(images, cmap='gray')
+```
+
+langkah terakhir memanggil fungsi prediksi
+```python:main.py
+test_prediction(784, W1, b1, W2, b2)
+```
+
+Contoh Output untuk Hasil Training dan prediksi  
+**Training:**
+![train-nn](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/train-nn.png)
+
+**Prediksi:**
+![pred-nn](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/predict-nn.png)
+
+Akhirnya, kita telah mengulik dalam-dalam tentang Neural Network dan implementasinya menggunakan pendekatan coding.
+Nahh mungkin cukup sampe disini aja buat week kali ini pabila bingung bisa tanyain digrup or u can get in touch with me: https://wildanaziz.vercel.app/
+
+🚀 Selamat belajar! Week berikutnya kita akan mulai eksplorasi [Deep Dive into CNN with tensorflow!](/weeks/week-4/)

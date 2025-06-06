@@ -1,0 +1,213 @@
+---
+title: "Week-4: Deep Dive into CNN (Convolutional Neural Network) with TensorFlow"
+description: "Learn the fundamentals of Convolutional Neural Networks (CNNs) and how to implement them using TensorFlow for image classification. This module is designed to be engaging and interactive, using the MNIST dataset for hands-on learning."
+date: 05-05-2025
+authors:
+  - avatar: "https://avatars.githubusercontent.com/u/87745598?v=4"
+    handle: wildanaziz
+    username: Wildan Aziz
+    handleUrl: "https://github.com/wildanaziz/"
+cover: "https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/art-tensorflow.png"
+---
+
+# Week-4: Deep Dive into CNN (Convolutional Neural Network) with TensorFlow
+
+Halo, Vision Amarineers! 🚀 Siap-siap buat nyemplung ke dunia **Convolutional Neural Networks (CNN)** pake **TensorFlow**! Di minggu ke-4 ini, kita bakal ngulik cara kerja CNN, matematika di baliknya, dan bikin proyek klasifikasi gambar yang super keren pake dataset MNIST. cuss kita nyemplung bareng!
+
+## Apa Itu CNN?
+
+CNN is like a superheronya neural network, khususnya buat ngolah data berbentuk grid, misalnya gambar. Bedanya sama Multi-Layer Perceptron (MLP), CNN pake **lapisan konvolusi** buat nangkap pola spasial, jadi cocok banget buat klasifikasi gambar, deteksi objek, dan banyak lagi.
+
+Komponen utama CNN:
+- **Lapisan Konvolusi**: Pake filter buat nyari fitur kayak tepi, tekstur, atau pola.
+- **Lapisan Pooling**: Nyusutin ukuran data tapi tetep simpen fitur penting (misalnya, max pooling).
+- **Lapisan Fully Connected**: Gabungin semua fitur buat bikin prediksi akhir.
+- **Fungsi Aktivasi**: Kasih sentuhan non-linear (contoh: ReLU).
+- **Dropout**: Cegah overfitting dengan matiin neuron secara acak pas training.
+
+![Arsitektur CNN](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/layer.png)
+
+Di modul ini, kita bakal bikin CNN buat klasifikasi angka tulis tangan (0–9) dari dataset MNIST. Siap-siap, ini bakal seru!
+
+## Matematika di Balik CNN
+
+Ayo kita bongkar rahasia CNN pake sedikit pendekatan matematis! ✨
+
+### Operasi Pooling
+![Arsitektur Pooling CNN](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/pooling.png)
+
+Pooling mengurangi ukuran peta fitur tetapi tetap mempertahankan informasi penting. Untuk **max pooling**, kita mengambil nilai maksimum di area tertentu (misalnya, 2x2):
+
+#### P(i,j) = max(S(i+m, j+n)) untuk m,n dalam region
+
+### Lapisan Fully Connected
+![Fully Connected](https://raw.githubusercontent.com/wildanaziz/TL-Vision/refs/heads/main/assets/img/fully.png)
+
+Setelah konvolusi dan pooling, fitur diratakan (flatten) dan dikirim ke lapisan fully connected, mirip seperti MLP:
+
+#### Z = W * A + b
+
+**Penjelasan:**
+- **W**: Bobot
+- **A**: Peta fitur yang telah diratakan
+- **b**: Bias
+
+Outputnya biasanya dilewatkan ke fungsi **softmax** untuk klasifikasi:
+
+#### softmax(Z)<sub>i</sub> = e<sup>Z<sub>i</sub></sup> / Σ<sub>j</sub> e<sup>Z<sub>j</sub></sup>
+
+### Backpropagation di CNN
+
+Pas training, error disebar ke belakang buat ngupdate bobot dan bias pake gradient descent. Gradien buat lapisan konvolusi dihitung pake chain rule, buat nyempurnain bobot filter biar loss-nya makin kecil.
+
+## Coding Asik dengan TensorFlow
+
+Sekarang waktunya ngoding! Kita bakal bikin CNN pake **TensorFlow** buat klasifikasi angka MNIST. Biar seru, kita bakal pake kode interaktif, visualisasi! 🎉
+
+### Langkah 1: Impor Library
+
+Pertama, kita impor library yang dibutuhin.
+
+```python:main.py
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras import layers, models
+%matplotlib inline
+```
+
+### Langkah 2: Muat dan Siapin Dataset MNIST
+
+Dataset MNIST punya 60,000 gambar training dan 10,000 gambar testing berupa angka tulis tangan (28x28 piksel).
+
+```python:main.py
+# Muat dataset MNIST
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# Normalisasi nilai piksel ke [0, 1]
+x_train = x_train.astype('float32') / 255.0
+x_test = x_test.astype('float32') / 255.0
+
+# Ubah bentuk gambar biar ada dimensi channel (28, 28, 1)
+x_train = x_train.reshape(-1, 28, 28, 1)
+x_test = x_test.reshape(-1, 28, 28, 1)
+
+# One-hot encoding untuk label
+y_train = tf.keras.utils.to_categorical(y_train, 10)
+y_test = tf.keras.utils.to_categorical(y_test, 10)
+
+print(f"Bentuk data training: {x_train.shape}")
+print(f"Bentuk data testing: {x_test.shape}")
+```
+
+**Fun fact**: Coba lihat beberapa angka dari MNIST biar tahu bentuk datanya!
+
+```python:main.py
+plt.figure(figsize=(10, 5))
+for i in range(6):
+    plt.subplot(2, 3, i+1)
+    plt.imshow(x_train[i].reshape(28, 28), cmap='gray')
+    plt.title(f"Angka: {np.argmax(y_train[i])}")
+    plt.axis('off')
+plt.show()
+```
+
+### Langkah 3: Bikin Model CNN
+
+Kita bikin CNN sederhana dengan dua lapisan konvolusi, max pooling, dan lapisan fully connected.
+
+```python:main.py
+def build_cnn_model():
+    model = models.Sequential([
+        # Lapisan Konvolusi Pertama
+        layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        layers.MaxPooling2D((2, 2)),
+        
+        # Lapisan Konvolusi Kedua
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.MaxPooling2D((2, 2)),
+        
+        # Ratakan dan Lapisan Fully Connected
+        layers.Flatten(),
+        layers.Dense(128, activation='relu'),
+        layers.Dropout(0.5),  # Cegah overfitting
+        layers.Dense(10, activation='softmax')  # 10 kelas buat angka 0-9
+    ])
+    return model
+
+model = build_cnn_model()
+model.summary()
+```
+
+**Fun Fact**: Lapisan `Conv2D` pake 32 filter buat nyari fitur kayak tepi, sedangkan `MaxPooling2D` bikin peta fitur jadi lebih kecil tapi tetep fokus ke pola penting!
+
+### Langkah 4: Kompilasi dan Latih Model
+
+Kompilasi model pake optimizer, fungsi loss, dan metrik.
+
+```python:main.py
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Latih model
+history = model.fit(x_train, y_train, epochs=10, batch_size=32, 
+                    validation_data=(x_test, y_test))
+```
+
+### Langkah 5: Evaluasi dan Visualisasi Hasil
+
+Cek performa model dan visualisasikan proses training-nya.
+
+```python:main.py
+# Evaluasi model
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
+print(f"Akurasi Testing: {test_accuracy:.4f}")
+
+# Plot riwayat training
+plt.figure(figsize=(12, 4))
+
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Akurasi Training')
+plt.plot(history.history['val_accuracy'], label='Akurasi Validasi')
+plt.title('Akurasi Model')
+plt.xlabel('Epoch')
+plt.ylabel('Akurasi')
+plt.legend()
+
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Loss Training')
+plt.plot(history.history['val_loss'], label='Loss Validasi')
+plt.title('Loss Model')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+
+plt.show()
+```
+
+### Langkah 6: Bikin Prediksi
+
+Sekarang kita prediksi beberapa angka dan lihat hasilnya!
+
+```python:main.py
+def plot_predictions(images, true_labels, predictions, num_samples=6):
+    plt.figure(figsize=(12, 6))
+    for i in range(num_samples):
+        plt.subplot(2, 3, i+1)
+        plt.imshow(images[i].reshape(28, 28), cmap='gray')
+        plt.title(f"Prediksi: {np.argmax(predictions[i])}, Asli: {np.argmax(true_labels[i])}")
+        plt.axis('off')
+    plt.show()
+
+# Bikin prediksi
+predictions = model.predict(x_test)
+plot_predictions(x_test, y_test, predictions)
+```
+
+## Penutup
+
+Selamat, vision amarineers 🎉 Kamu udah bikin CNN dari nol pake TensorFlow dan berhasil klasifikasi angka tulis tangan. Kamu juga udah paham matematika di balik konvolusi, pooling, dan backpropagation. Terus eksperimen, ya—coba tambah filter, lapisan, atau main sama dataset lain kayak CIFAR-10!
+Nahh mungkin cukup sampe disini aja buat week kali ini pabila bingung bisa tanyain digrup or u can get in touch with me: https://wildanaziz.vercel.app/
+
+🚀 **Next Week**: Kita bakal nyemplung ke Roboflow, Introduction to YOLO & CUDA Installation. Stay tuned! [Roboflow, Introduction to YOLO & CUDA Installation](/weeks/week-5/)

@@ -1,0 +1,180 @@
+@import url("./syntax.css");
+@import url("./algolia.css");
+
+:root {
+  font-variant-ligatures: none;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ocean */
+@layer base {
+    :root {
+        --background: 210 50% 95%; /* Soft light blue */
+        --foreground: 220 20% 15%; /* Deep navy */
+        --card: 210 40% 98%; /* Almost white blue */
+        --card-foreground: 220 20% 15%;
+        --popover: 210 40% 98%;
+        --popover-foreground: 220 20% 15%;
+        --primary: 220 80% 60%; /* Vibrant azure blue */
+        --primary-foreground: 210 50% 95%;
+        --secondary: 220 30% 85%; /* Light sky blue */
+        --secondary-foreground: 220 20% 15%;
+        --muted: 220 30% 85%;
+        --muted-foreground: 220 20% 40%; /* Soft steel blue */
+        --accent: 200 70% 40%; /* Strong ocean blue */
+        --accent-foreground: 0 0% 100%; /* Pure white */
+        --destructive: 0 65% 55%; /* Soft red */
+        --destructive-foreground: 220 20% 95%; /* Lightened foreground */
+        --border: 220 15% 90%; /* Light grey-blue */
+        --input: 220 15% 90%;
+        --ring: 220 40% 50%; /* Cool blue ring */
+        --radius: 0.5rem;
+        --chart-1: 210 60% 50%; /* Classic blue */
+        --chart-2: 220 40% 65%; /* Soft sky */
+        --chart-3: 220 70% 50%; /* Azure blue */
+        --chart-4: 200 60% 55%; /* Ocean blue */
+        --chart-5: 240 30% 40%; /* Deep teal */
+    }
+
+    .dark {
+        --background: 220 20% 10%; /* Midnight navy */
+        --foreground: 220 80% 90%; /* Soft sky blue */
+        --card: 220 20% 12%; /* Slightly lighter midnight */
+        --card-foreground: 220 80% 90%;
+        --popover: 220 20% 12%;
+        --popover-foreground: 220 80% 90%;
+        --primary: 210 70% 60%; /* Soft bright blue */
+        --primary-foreground: 220 20% 10%;
+        --secondary: 220 30% 15%; /* Dark steel blue */
+        --secondary-foreground: 220 80% 90%;
+        --muted: 220 30% 15%;
+        --muted-foreground: 210 20% 85%; /* Pale navy */
+        --accent: 220 80% 60%; /* Vibrant azure blue */
+        --accent-foreground: 220 80% 90%;
+        --destructive: 0 65% 55%; /* Soft red */
+        --destructive-foreground: 220 80% 90%;
+        --border: 220 30% 15%; /* Dark steel blue */
+        --input: 220 30% 15%;
+        --ring: 220 60% 60%; /* Vivid blue ring */
+        --chart-1: 210 60% 50%; /* Classic blue */
+        --chart-2: 220 40% 65%; /* Soft sky */
+        --chart-3: 220 70% 50%; /* Azure blue */
+        --chart-4: 200 60% 55%; /* Ocean blue */
+        --chart-5: 240 30% 40%; /* Deep teal */
+    }
+}
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.prose {
+  margin: 0 !important;
+}
+
+pre {
+  padding: 2px 0 !important;
+  width: inherit !important;
+  overflow-x: auto;
+}
+
+pre>code {
+  display: grid;
+  max-width: inherit !important;
+  padding: 14px 0 !important;
+}
+
+.code-line {
+  padding: 0.75px 16px;
+  @apply border-l-2 border-transparent;
+}
+
+.line-number::before {
+  display: inline-block;
+  width: 1rem;
+  margin-right: 22px;
+  margin-left: -2px;
+  color: rgb(110, 110, 110);
+  content: attr(line);
+  font-size: 13.5px;
+  text-align: right;
+}
+
+.highlight-line {
+  @apply bg-primary/5 border-l-2 border-primary/30;
+}
+
+.rehype-code-title {
+  @apply px-2 -mb-10 w-full text-sm pb-5 font-medium mt-5 font-code;
+}
+
+.highlight-comp>code {
+  background-color: transparent !important;
+}
+
+/* Global Custom Scrollbar */
+:root {
+  --scrollbar-thumb: rgba(113,
+      113,
+      122,
+      0.6);
+  /* Subtle dark gray for light mode thumb */
+}
+
+[data-theme="dark"],
+[class*="dark"] {
+  --scrollbar-thumb: rgba(160,
+      160,
+      160,
+      0.4);
+  /* Softer gray for dark mode thumb */
+}
+
+/* Apply globally */
+* {
+  scrollbar-width: thin;
+  /* Firefox thin scrollbar */
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+  /* Thumb color with transparent track */
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  /* Vertical scrollbar width */
+  height: 8px;
+  /* Horizontal scrollbar height */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  /* Thumb color */
+  border-radius: 9999px;
+  /* Fully rounded thumb */
+  border: 2px solid transparent;
+  /* Thin padding effect */
+  background-clip: content-box;
+  /* Smooth thumb edges */
+}
+
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+  /* Transparent track */
+}
+
+.rehype-code-title {
+  @apply flex items-center gap-2
+}
+
+td>code {
+  word-break: keep-all !important;
+}
