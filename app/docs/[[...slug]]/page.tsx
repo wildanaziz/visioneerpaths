@@ -1,49 +1,68 @@
-import { buttonVariants } from "@/components/ui/button";
+import DocsBreadcrumb from "@/components/docs-breadcrumb";
+import Pagination from "@/components/pagination";
+import { Suspense } from "react";
+import Toc from "@/components/toc";
 import { page_routes } from "@/lib/routes-config";
-import { MoveUpRightIcon } from "lucide-react";
-import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getCompiledDocsForSlug, getDocFrontmatter, getDocsTocs } from "@/lib/markdown";
+import { Typography } from "@/components/typography";
 
-export default function Home() {
+type PageProps = {
+  params: Promise<{ slug: string[] }>;
+};
+
+export default async function DocsPage(props: PageProps) {
+  const params = await props.params;
+  const { slug = [] } = params;
+
+  const pathName = slug.join("/");
+  const res = await getCompiledDocsForSlug(pathName);
+  if (!res) notFound();
+
+  // Ambil data TOC di server-side
+  const tocs = await getDocsTocs(pathName);
+
   return (
-    <div className="flex sm:min-h-[87.5vh] min-h-[82vh] flex-col sm:items-center justify-center text-center sm:py-8 py-14">
-      <Link
-        href="https://github.com/wildanaziz/TL-Vision"
-        target="_blank"
-        className="mb-5 sm:text-lg flex items-center gap-2 underline underline-offset-4 sm:-mt-12"
-      >
-        See our Github Repository{" "}
-        <MoveUpRightIcon className="w-4 h-4 font-extrabold" />
-      </Link>
-      <h1 className="text-[1.80rem] leading-8 sm:px-8 md:leading-[4.5rem] font-bold mb-4 sm:text-6xl text-left sm:text-center">
-        Deep Dive as Vision Researcher build ur own Vision World with Compviz Project.
-      </h1>
-      <p className="mb-8 md:text-lg text-base max-w-[1200px] text-muted-foreground text-left sm:text-center">
-        Ready to explore the fascinating world of computer vision? Invites you to dive deep into the techniques and applications that enable computers to &quot;see&quot; and interpret the visual world. 
-        Through the &quot;Compviz Project,&quot; you&apos;ll get hands-on experience building your own vision-based applications, from image recognition to object detection and beyond. 
-        Unleash your creativity and become a vision researcher by crafting your unique vision world!
-      </p>
-      <div className="sm:flex sm:flex-row grid grid-cols-2 items-center sm;gap-5 gap-3 mb-8">
-        <Link
-          href={`/docs${page_routes[0].href}`}
-          className={buttonVariants({ className: "px-6", size: "lg" })}
-        >
-          Let&apos;s Dive!
-        </Link>
-        <Link
-          href="/weeks"
-          className={buttonVariants({
-            variant: "secondary",
-            className: "px-6",
-            size: "lg",
-          })}
-        >
-          Read Our Weeks ^_^
-        </Link>
+    <div className="flex items-start gap-10">
+      <div className="flex-[4.5] py-10 mx-auto max-w-4xl">
+        <div className="w-full mx-auto">
+          <DocsBreadcrumb paths={slug} />
+          <Typography>
+            <h1 className="sm:text-3xl text-2xl !-mt-0.5 font-bold">
+              {res.frontmatter.title}
+            </h1>
+            <p className="-mt-4 text-muted-foreground sm:text-[16.5px] text-[14.5px]">
+              {res.frontmatter.description || "No description available"}
+            </p>
+            <div className="prose dark:prose-invert mt-6">{res.content}</div>
+            <Pagination pathname={pathName} />
+          </Typography>
+        </div>
       </div>
-      {/* <span className="sm:flex hidden flex-row items-start sm:gap-2 gap-0.5 text-muted-foreground text-md mt-5 -mb-12 max-[800px]:mb-12 font-code sm:text-base text-sm font-medium">
-        <TerminalSquareIcon className="w-5 h-5 sm:mr-1 mt-0.5" />
-        {"npx create-aria-doc <project-directory>"}
-      </span> */}
+
+      <Suspense fallback={<div className="w-[20rem] p-4">Loading TOC...</div>}>
+        <Toc tocs={tocs} /> {/* Hapus props path */}
+      </Suspense>
     </div>
   );
+}
+
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
+  const { slug = [] } = params;
+
+  const pathName = slug.join("/");
+  const res = await getDocFrontmatter(pathName);
+  if (!res) return { title: "Not Found", description: "Page not found" };
+  const { title, description } = res;
+  return {
+    title: title || "Untitled Page",
+    description: description || "No description available",
+  };
+}
+
+export function generateStaticParams() {
+  return page_routes.map((item) => ({
+    slug: item.href.split("/").slice(1),
+  }));
 }
