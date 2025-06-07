@@ -37,12 +37,12 @@ export default function Home() {
             size: "lg",
           })}
         >
-          Read Our Weeks ^_^
+          Learn with Us ^_^
         </Link>
       </div>
       {/* <span className="sm:flex hidden flex-row items-start sm:gap-2 gap-0.5 text-muted-foreground text-md mt-5 -mb-12 max-[800px]:mb-12 font-code sm:text-base text-sm font-medium">
         <TerminalSquareIcon className="w-5 h-5 sm:mr-1 mt-0.5" />
-        {"npx create-aria-doc <project-directory>"}
+        {"-"}
       </span> */}
     </div>
   );

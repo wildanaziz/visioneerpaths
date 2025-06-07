@@ -1,5 +1,6 @@
 import { ModeToggle } from "@/components/theme-toggle";
-import { GithubIcon, InstagramIcon, ShipIcon } from "lucide-react";
+import { GithubIcon, ShipIcon } from "lucide-react";
+// import { InstagramIcon } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import Anchor from "./anchor";
@@ -62,7 +63,7 @@ export function Navbar() {
               >
                 <GithubIcon className="h-[1.1rem] w-[1.1rem]" />
               </Link>
-              <Link
+              {/* <Link
                 href="https://www.instagram.com/amarine.squad/"
                 className={buttonVariants({
                   variant: "ghost",
@@ -70,7 +71,7 @@ export function Navbar() {
                 })}
               >
                 <InstagramIcon className="h-[1.1rem] w-[1.1rem]" />
-              </Link>
+              </Link> */}
               <ModeToggle />
             </div>
           </div>
